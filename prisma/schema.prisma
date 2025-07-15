@@ -1,0 +1,172 @@
+// prisma/schema.prisma
+
+
+datasource db {
+  provider = "mysql" // <-- Pastikan ini "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+// --- ENUMS ---
+enum StatusProgressEnum {
+  Belum_Dimulai
+  Sedang_Dikerjakan
+  Selesai
+  @@map("status_progress_enum")
+}
+
+enum DocumentStatusEnum {
+  Menunggu_Verifikasi
+  Diverifikasi
+  Ditolak
+  @@map("document_status_enum")
+}
+
+enum AssetStatusEnum {
+  Belum_Diverifikasi
+  Sudah_Diverifikasi
+  @@map("asset_status_enum")
+}
+
+
+// --- MODELS ---
+model Role {
+  idRole      String   @id @default(uuid()) @map("id_role") // REVISI
+  name        String   @unique @db.VarChar(50)
+  description String?  @db.Text
+  users       User[]
+  @@map("roles")
+}
+
+model TravelAgent {
+  idTravelAgent String  @id @default(uuid()) @map("id_travel_agent") // REVISI
+  name          String  @db.VarChar(255)
+  address       String? @db.Text
+  phone         String? @db.VarChar(20)
+  users         User[]
+  @@map("travel_agents")
+}
+
+model User {
+  idUser            String           @id @default(uuid()) @map("id_user") // REVISI
+  fullName          String           @map("full_name") @db.VarChar(255)
+  email             String           @unique
+  password          String
+  phone             String?          @db.VarChar(20)
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+
+  roleId            String           @map("role_id") // REVISI
+  role              Role             @relation(fields: [roleId], references: [idRole]) // REVISI
+
+  travelAgentId     String?          @map("travel_agent_id") // REVISI
+  travelAgent       TravelAgent?     @relation(fields: [travelAgentId], references: [idTravelAgent]) // REVISI
+
+  statusProgress    StatusProgress[]
+  checklists        Checklist[]
+  documents         Document[]
+  assets            JamaahAsset[]    @relation("AssetOwner")
+  verifiedAssets    JamaahAsset[]    @relation("AssetVerifier")
+  schedules         Schedule[]
+  gpsLocations      GpsLocation[]
+  travelPeriods     TravelPeriod[]
+  @@map("users")
+}
+
+model RitualSection {
+  idRitualSection String           @id @default(uuid()) @map("id_ritual_section") // REVISI
+  name            String           @db.VarChar(255)
+  description     String?          @db.Text
+  sequenceOrder   Int?             @map("sequence_order")
+  statusProgress  StatusProgress[]
+  @@map("ritual_sections")
+}
+
+model StatusProgress {
+  idStatusProgress String             @id @default(uuid()) @map("id_status_progress") // REVISI
+  status           StatusProgressEnum @default(Belum_Dimulai)
+  completedAt      DateTime?          @map("completed_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+
+  userId           String             @map("user_id") // REVISI
+  user             User               @relation(fields: [userId], references: [idUser], onDelete: Cascade) // REVISI
+
+  ritualSectionId  String             @map("ritual_section_id") // REVISI
+  ritualSection    RitualSection      @relation(fields: [ritualSectionId], references: [idRitualSection], onDelete: Cascade) // REVISI
+  @@map("status_progress")
+}
+
+model Checklist {
+  idChecklist String   @id @default(uuid()) @map("id_checklist") // REVISI
+  itemName    String   @map("item_name") @db.VarChar(255)
+  description String?  @db.Text
+  isCompleted Boolean  @default(false) @map("is_completed")
+
+  userId      String   @map("user_id") // REVISI
+  user        User     @relation(fields: [userId], references: [idUser], onDelete: Cascade) // REVISI
+  @@map("checklists")
+}
+
+model Document {
+  idDocument   String             @id @default(uuid()) @map("id_document") // REVISI
+  documentType String             @map("document_type") @db.VarChar(100)
+  filePath     String             @map("file_path")
+  status       DocumentStatusEnum @default(Menunggu_Verifikasi)
+
+  userId       String             @map("user_id") // REVISI
+  user         User               @relation(fields: [userId], references: [idUser], onDelete: Cascade) // REVISI
+  @@map("documents")
+}
+
+model JamaahAsset {
+  idJamaahAsset String          @id @default(uuid()) @map("id_jamaah_asset") // REVISI
+  name          String          @db.VarChar(255)
+  description   String?         @db.Text
+  status        AssetStatusEnum @default(Belum_Diverifikasi)
+  verifiedAt    DateTime?       @map("verified_at")
+
+  userId        String          @map("user_id") // REVISI
+  user          User            @relation("AssetOwner", fields: [userId], references: [idUser], onDelete: Cascade) // REVISI
+
+  verifiedById  String?         @map("verified_by") // REVISI
+  verifiedBy    User?           @relation("AssetVerifier", fields: [verifiedById], references: [idUser], onDelete: SetNull) // REVISI
+  @@map("jamaah_assets")
+}
+
+model Schedule {
+  idSchedule String    @id @default(uuid()) @map("id_schedule") // REVISI
+  activity   String    @db.VarChar(255)
+  location   String?   @db.VarChar(255)
+  startTime  DateTime? @map("start_time")
+  endTime    DateTime? @map("end_time")
+
+  userId     String    @map("user_id") // REVISI
+  user       User      @relation(fields: [userId], references: [idUser], onDelete: Cascade) // REVISI
+  @@map("schedules")
+}
+
+model GpsLocation {
+  idGpsLocation String   @id @default(uuid()) @map("id_gps_location") // REVISI
+  latitude      Decimal  @db.Decimal(10, 8)
+  longitude     Decimal  @db.Decimal(11, 8)
+  timestamp     DateTime @default(now())
+
+  userId        String   @map("user_id") // REVISI
+  user          User     @relation(fields: [userId], references: [idUser], onDelete: Cascade) // REVISI
+  @@map("gps_locations")
+}
+
+model TravelPeriod {
+  idTravelPeriod String    @id @default(uuid()) @map("id_travel_period") // REVISI
+  packageName    String    @map("package_name") @db.VarChar(255)
+  startDate      DateTime? @map("start_date") @db.Date
+  endDate        DateTime? @map("end_date") @db.Date
+
+  userId         String    @map("user_id") // REVISI
+  user           User      @relation(fields: [userId], references: [idUser], onDelete: Cascade) // REVISI
+  @@map("travel_periods")
+}
