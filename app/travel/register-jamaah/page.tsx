@@ -3,8 +3,7 @@ import React from 'react'
 const page = () => {
   return (
     <div>
-      <h1>Gallery</h1>
-      <p>Welcome to the gallery page!</p>
+      ini tinggal ganti aja bebas sesuai isi isi tadi
     </div>
   )
 }

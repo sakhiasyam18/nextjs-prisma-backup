@@ -17,67 +17,25 @@ interface MenuItem {
 
 const menuData: MenuItem[] = [
   {
-    id: "home",
-    text: "Home",
+    id: "Dashboard",
+    text: "Dashboard",
     icon: "DashboardIcon", // Menggunakan ikon yang sudah ada
     link: "/travel/dashboard", // Mengubah link ke dashboard utama
     roles: ["public"], // Terlihat untuk semua orang
   },
   {
-    id: "our-division",
-    text: "Our Division",
+    id: "list-jamaah",
+    text: "list-jamaah",
     icon: "UsersIcon", // Menggunakan ikon yang sudah ada
-    link: "#", // Mengubah link kosong menjadi # karena submenu tidak diimplementasikan
+    link: "/travel/list-jamaah", // Mengubah link kosong menjadi # karena submenu tidak diimplementasikan
     roles: ["public"],
   },
   {
-    id: "company-profile",
-    text: "Company Profile",
+    id: "register-jamaah",
+    text: "Register Jamaah",
     icon: "ProfileIcon", // Menggunakan ikon yang sudah ada
-    link: "#", // Mengubah link kosong menjadi #
+    link: "/travel/register-jamaah", // Mengubah link kosong menjadi #
     roles: ["public"],
-  },
-  {
-    id: "join-us",
-    text: "Join Us",
-    icon: "ProfileIcon", // Menggunakan ikon yang sudah ada
-    link: "/travel/joinus", // Mengubah link kosong menjadi #
-    roles: ["public"],
-  },
-  {
-    id: "blog-news",
-    text: "Blog & News",
-    icon: "NewsIcon", // Menggunakan ikon yang sudah ada
-    link: "news/latest",
-    roles: ["public"],
-  },
-  {
-    id: "gallery",
-    text: "Gallery",
-    icon: "ImageIcon", // Menggunakan ikon yang sudah ada
-    link: "/travel/gallery",
-    roles: ["public"],
-  },
-  {
-    id: "contact-us",
-    text: "Contact Us",
-    icon: "PhoneIcon", // Menggunakan ikon yang sudah ada
-    link: "contact-us",
-    roles: ["public"],
-  },
-  {
-    id: "language-switcher", // ID untuk menu "globe" (pemilih bahasa)
-    text: "Language", // Teks untuk ikon globe
-    icon: "GlobeIcon", // Menggunakan ikon globe yang sudah ada
-    link: "#", // Biasanya pemilih bahasa tidak mengarah ke link baru, tapi membuka modal/dropdown
-    roles: ["public"],
-  },
-  {
-    id: "admin-dashboard", // ID untuk menu "user" (admin dashboard)
-    text: "Admin Dashboard", // Teks untuk ikon user
-    icon: "UserIcon", // Menggunakan ikon user yang sudah ada
-    link: "admin/dashboard",
-    roles: ["Admin"], // Mengasumsikan ada peran 'Admin' baru untuk ini
   },
 ];
 
