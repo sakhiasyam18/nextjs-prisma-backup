@@ -41,7 +41,7 @@ const menuData: MenuItem[] = [
     id: "join-us",
     text: "Join Us",
     icon: "ProfileIcon", // Menggunakan ikon yang sudah ada
-    link: "#", // Mengubah link kosong menjadi #
+    link: "/travel/joinus", // Mengubah link kosong menjadi #
     roles: ["public"],
   },
   {
