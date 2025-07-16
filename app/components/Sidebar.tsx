@@ -1,9 +1,9 @@
 // D:\mabruxxxx\mabruxfix\components\Sidebar.tsx
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import React, { ReactNode } from 'react';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React, { ReactNode } from "react";
 
 // --- Menu Data Interface and Data ---
 interface MenuItem {
@@ -13,7 +13,6 @@ interface MenuItem {
   link: string;
   roles: string[]; // Peran pengguna yang diizinkan melihat menu ini
 }
-
 
 const menuData: MenuItem[] = [
   {
@@ -86,13 +85,10 @@ interface SidebarProps {
   children: ReactNode;
 }
 
-
 export default function Sidebar({ userRole }: SidebarProps) {
   const pathname = usePathname();
 
-  const filteredMenu = menuData.filter(item =>
-    item.roles.includes("public") || (userRole && item.roles.includes(userRole))
-  );
+  const filteredMenu = menuData.filter((item) => item.roles.includes("public") || (userRole && item.roles.includes(userRole)));
 
   return (
     <div className="w-64 bg-red-900 text-gray-100 p-5 min-h-screen shadow-lg flex flex-col transition-all duration-300 ease-in-out">
@@ -104,7 +100,9 @@ export default function Sidebar({ userRole }: SidebarProps) {
       </div>
 
       {/* Navigasi Utama */}
-      <nav className="flex-1 space-y-2"> {/* space-y-2 untuk jarak antar menu group */}
+      <nav className="flex-1 space-y-2">
+        {" "}
+        {/* space-y-2 untuk jarak antar menu group */}
         <ul>
           {filteredMenu.map((item) => {
             const isActive = pathname === item.link;
@@ -114,9 +112,11 @@ export default function Sidebar({ userRole }: SidebarProps) {
                 <Link
                   href={item.link}
                   className={`group flex items-center p-3 rounded-lg transition-all duration-200 ease-in-out
-                    ${isActive
-                      ? 'bg-blue-700 text-white shadow-md transform scale-105' // Lebih menonjol saat aktif
-                      : 'hover:bg-gray-700 hover:text-white'}
+                    ${
+                      isActive
+                        ? "bg-blue-700 text-white shadow-md transform scale-105" // Lebih menonjol saat aktif
+                        : "hover:bg-gray-700 hover:text-white"
+                    }
                   `}
                 >
                   <span className="ml-3 text-sm font-medium">{item.text}</span>
@@ -128,9 +128,7 @@ export default function Sidebar({ userRole }: SidebarProps) {
       </nav>
 
       {/* Footer Sidebar (Opsional) */}
-      <div className="mt-auto pt-6 border-t border-gray-700 text-xs text-gray-500 text-center">
-        &copy; 2025 Mabrux App.
-      </div>
+      <div className="mt-auto pt-6 border-t border-gray-700 text-xs text-gray-500 text-center">&copy; 2025 Mabrux App.</div>
     </div>
   );
 }
