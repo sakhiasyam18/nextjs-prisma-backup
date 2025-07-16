@@ -52,6 +52,11 @@ export default function AddJamaahPage() {
 
       <div className="max-w-lg w-full bg-white p-10 rounded-2xl shadow-lg">
         <h2 className="text-xl font-semibold text-center mb-6 text-gray-700">Import Data Jamaah (Excel)</h2>
+
+        <a href="/template/template-mabrurX.xlsx" download className="block w-full text-center bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium py-3 rounded-xl transition mb-4">
+          Download Template Excel
+        </a>
+
         <input
           type="file"
           accept=".xlsx"
