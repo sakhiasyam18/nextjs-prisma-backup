@@ -33,8 +33,9 @@ export default function AddJamaahPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-12 p-6">
-      <div className="max-w-lg w-full bg-white p-10 rounded-2xl shadow-lg">
+    <div className="p-6 min-h-screen flex  bg-gray-50">
+      {/* Formulir Section */}
+      <div className="w-full max-w-4xl bg-white p-10 rounded-2xl shadow-lg mb-8">
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Formulir Data Jamaah</h1>
         <form onSubmit={handleSubmit} className="space-y-5">
           <InputField label="Nama" name="nama" value={formData.nama} onChange={handleChange} placeholder="Nama lengkap" />
@@ -50,7 +51,8 @@ export default function AddJamaahPage() {
         </form>
       </div>
 
-      <div className="max-w-lg w-full bg-white p-10 rounded-2xl shadow-lg">
+      {/* Import Excel Section */}
+      <div className="w-full max-w-2xl bg-white p-10 rounded-2xl shadow-lg">
         <h2 className="text-xl font-semibold text-center mb-6 text-gray-700">Import Data Jamaah (Excel)</h2>
 
         <a href="/template/template-mabrurX.xlsx" download className="block w-full text-center bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium py-3 rounded-xl transition mb-4">
@@ -72,7 +74,7 @@ export default function AddJamaahPage() {
   );
 }
 
-function InputField({ label, name, value, onChange, placeholder, type = "text" }: { label: string; name: string; value: string; onChange: any; placeholder?: string; type?: string }) {
+function InputField({ label, name, value, onChange, placeholder, type = "text" }: { label: string; name: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; placeholder?: string; type?: string }) {
   return (
     <div>
       <label className="block text-gray-600 mb-2">{label}</label>
@@ -81,7 +83,7 @@ function InputField({ label, name, value, onChange, placeholder, type = "text" }
   );
 }
 
-function TextAreaField({ label, name, value, onChange, placeholder }: { label: string; name: string; value: string; onChange: any; placeholder?: string }) {
+function TextAreaField({ label, name, value, onChange, placeholder }: { label: string; name: string; value: string; onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void; placeholder?: string }) {
   return (
     <div>
       <label className="block text-gray-600 mb-2">{label}</label>

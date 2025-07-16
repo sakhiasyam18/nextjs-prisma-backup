@@ -24,11 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`flex h-screen ${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ClientSide />      
-        {children}
+      <body>
+        <div className="flex min-h-screen">
+          <ClientSide /> {/* Sidebar */}
+          <main className="flex-1 bg-gray-50 p-6">{children}</main>
+        </div>
       </body>
     </html>
   );
