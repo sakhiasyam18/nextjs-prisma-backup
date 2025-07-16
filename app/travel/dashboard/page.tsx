@@ -1,5 +1,7 @@
 // app/travel/dashboard/page.tsx
 "use client";
+// Impor ikon di bagian atas file Anda
+import { FiLogOut, FiArrowRight } from "react-icons/fi";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -50,40 +52,41 @@ export default function TravelDashboardPage() {
   if (!user) {
     return <p>Loading Dashboard Travel...</p>;
   }
-
+  // Ganti bagian return() Anda dengan kode di bawah ini
   return (
-    <div className="p-8 space-y-6 bg-slate-50 min-h-full rounded-lg">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="flex justify-between items-start">
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 rounded-2xl bg-slate-800/50 p-6 backdrop-blur-lg border border-slate-700 shadow-xl">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">
-            Dashboard Travel
-          </h1>
-          <p className="mt-1 text-slate-500">
+          <h1 className="text-3xl font-bold text-white">Dashboard Travel</h1>
+          <p className="mt-1">
             Selamat datang kembali, {user.email}!
           </p>
         </div>
         <button
           onClick={handleLogout}
-          className="px-4 py-2 bg-white border border-slate-300 text-slate-700 font-semibold rounded-lg hover:bg-slate-50 transition-colors text-sm"
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-700/50 border border-slate-600 text-slate-300 font-semibold rounded-lg hover:bg-slate-700 hover:text-white transition-colors text-sm w-full md:w-auto"
         >
-          Logout
+          <FiLogOut />
+          <span>Logout</span>
         </button>
       </div>
 
       {/* Panel Utama */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-        <h2 className="text-lg font-semibold text-slate-900">
+      <div className="rounded-2xl bg-slate-800/50 p-8 backdrop-blur-lg border border-slate-700 shadow-xl transition-all duration-300 hover:shadow-2xl hover:border-slate-600">
+        <h2 className="text-2xl font-bold text-white">
           Panel Khusus Agen Travel
         </h2>
-        <p className="mt-1 text-slate-600">
-          Ini adalah konten yang hanya bisa dilihat oleh Agen Travel.
+        <p className="mt-2max-w-xl">
+          Ini adalah pusat kendali Anda. Kelola semua data jamaah, dokumen, dan
+          jadwal perjalanan dari panel ini.
         </p>
         <a
-          href="/travel/list-jamaah" // Link diperbaiki sesuai struktur folder
-          className="mt-4 inline-block bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-blue-700 transition-colors"
+          href="/travel/list-jamaah"
+          className="mt-6 inline-flex items-center gap-2 bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-blue-500/50 transform hover:-translate-y-1"
         >
-          Lihat Daftar Jamaah
+          <span>Lihat Daftar Jamaah</span>
+          <FiArrowRight />
         </a>
       </div>
     </div>

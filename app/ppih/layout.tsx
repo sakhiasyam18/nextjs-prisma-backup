@@ -1,9 +1,12 @@
+//app/ppih/layout.tsx
 import type { Metadata } from "next";
-import ClientSide from "./components/sidebarClient"; // Mengarah ke sidebar baru untuk PPIH
+import ClientSide from "./components/sidebarClient"; // Mengarah ke sidebar PPIH
 
+// Metadata yang lebih deskriptif untuk SEO dan identitas halaman
 export const metadata: Metadata = {
-  title: "PPIH Dashboard",
-  description: "Dashboard for PPIH",
+  title: "Portal Resmi PPIH",
+  description:
+    "Dashboard Manajemen untuk Petugas Penyelenggara Ibadah Haji (PPIH)",
 };
 
 export default function PpihLayout({

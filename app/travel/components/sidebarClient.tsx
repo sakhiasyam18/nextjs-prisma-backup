@@ -1,83 +1,87 @@
 // D:\mabruxxxx\mabruxfix\components\Sidebar.tsx
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import React, { ReactNode } from 'react';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
+// Impor ikon dari react-icons
+import {
+  FiGrid,
+  FiUsers,
+  FiUserPlus,
+  FiCompass,
+  FiLogOut,
+} from "react-icons/fi";
 
-// --- Menu Data Interface and Data ---
+// --- Tipe Data untuk Menu ---
 interface MenuItem {
   id: string;
   text: string;
-  icon: string; // Nama komponen ikon (menggunakan ikon yang sudah ada di Sidebar.tsx)
+  // Mengubah tipe 'icon' menjadi komponen React
+  icon: React.ElementType;
   link: string;
-  roles: string[]; // Peran pengguna yang diizinkan melihat menu ini
 }
 
-
+// --- Data Menu dengan Ikon yang Sesuai ---
 const menuData: MenuItem[] = [
   {
-    id: "Dashboard",
+    id: "dashboard",
     text: "Dashboard",
-    icon: "DashboardIcon", // Menggunakan ikon yang sudah ada
-    link: "/travel/dashboard", // Mengubah link ke dashboard utama
-    roles: ["public"], // Terlihat untuk semua orang
+    icon: FiGrid, // Ikon untuk Dashboard
+    link: "/travel/dashboard",
   },
   {
     id: "list-jamaah",
-    text: "list-jamaah",
-    icon: "UsersIcon", // Menggunakan ikon yang sudah ada
-    link: "/travel/list-jamaah", // Mengubah link kosong menjadi # karena submenu tidak diimplementasikan
-    roles: ["public"],
+    text: "Daftar Jamaah",
+    icon: FiUsers, // Ikon untuk Daftar Jamaah
+    link: "/travel/list-jamaah",
   },
   {
     id: "register-jamaah",
-    text: "Register Jamaah",
-    icon: "ProfileIcon", // Menggunakan ikon yang sudah ada
-    link: "/travel/register-jamaah", // Mengubah link kosong menjadi #
-    roles: ["public"],
+    text: "Registrasi Jamaah",
+    icon: FiUserPlus, // Ikon untuk Registrasi
+    link: "/travel/register-jamaah",
   },
 ];
-
-interface SidebarProps {
-  userRole: string | null;
-  children: ReactNode;
-}
-
 
 export default function ClientSide() {
   const pathname = usePathname();
 
-//   const filteredMenu = menuData.filter(item =>
-//     item.roles.includes("public") || (userRole && item.roles.includes(userRole))
-//   );
-
   return (
-    <div className="w-64 bg-red-900 text-gray-100 p-5 min-h-screen shadow-lg flex flex-col transition-all duration-300 ease-in-out">
-      {/* Header Sidebar: Logo/Nama Aplikasi */}
-      <div className="flex items-center mb-8 px-2 py-2">
-        {/* Anda bisa menambahkan logo di sini */}
-        <span className="text-2xl font-extrabold text-blue-400">test</span>
-        <span className="text-lg font-light ml-1 text-gray-400">App</span>
+    <div className="w-64 bg-slate-900 text-slate-300 p-4 flex flex-col border-r border-slate-800 shadow-2xl">
+      {/* Header Sidebar: Logo Aplikasi */}
+      <div className="flex items-center gap-3 px-3 py-2 mb-6">
+        <div className="bg-blue-600 p-2 rounded-lg">
+          <FiCompass className="text-white h-6 w-6" />
+        </div>
+        <span className="text-xl font-bold text-white">Mabrux App</span>
       </div>
 
       {/* Navigasi Utama */}
-      <nav className="flex-1 space-y-2"> {/* space-y-2 untuk jarak antar menu group */}
+      <nav className="flex-1 space-y-2">
         <ul>
           {menuData.map((item) => {
             const isActive = pathname === item.link;
-
             return (
               <li key={item.id}>
                 <Link
                   href={item.link}
-                  className={`group flex items-center p-3 rounded-lg transition-all duration-200 ease-in-out
-                    ${isActive
-                      ? 'bg-blue-700 text-white shadow-md transform scale-105' // Lebih menonjol saat aktif
-                      : 'hover:bg-gray-700 hover:text-white'}
+                  className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200
+                    ${
+                      isActive
+                        ? "bg-blue-600/20 text-white border-l-4 border-blue-500 font-semibold"
+                        : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                    }
                   `}
                 >
-                  <span className="ml-3 text-sm font-medium">{item.text}</span>
+                  <item.icon
+                    className={`h-5 w-5 ${
+                      isActive
+                        ? "text-blue-400"
+                        : "text-slate-500 group-hover:text-white"
+                    }`}
+                  />
+                  <span className="text-sm">{item.text}</span>
                 </Link>
               </li>
             );
@@ -85,9 +89,23 @@ export default function ClientSide() {
         </ul>
       </nav>
 
-      {/* Footer Sidebar (Opsional) */}
-      <div className="mt-auto pt-6 border-t border-gray-700 text-xs text-gray-500 text-center">
-        &copy; 2025 Mabrux App.
+      {/* Footer Sidebar: User Profile & Logout */}
+      <div className="mt-auto pt-4 border-t border-slate-800">
+        <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800">
+          <img
+            src="https://placehold.co/40x40/1e293b/94a3b8?text=A"
+            alt="User Avatar"
+            className="h-10 w-10 rounded-full border-2 border-slate-700"
+          />
+          <div>
+            <p className="text-sm font-semibold text-white">Admin Travel</p>
+            <p className="text-xs text-slate-400">admin.travel@email.com</p>
+          </div>
+        </div>
+        <button className="w-full mt-2 group flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-400 hover:bg-red-500/20 hover:text-red-300 transition-colors duration-200">
+          <FiLogOut className="h-5 w-5 text-slate-500 group-hover:text-red-400" />
+          <span className="text-sm font-medium">Logout</span>
+        </button>
       </div>
     </div>
   );
