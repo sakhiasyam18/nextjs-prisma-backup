@@ -7,6 +7,24 @@ const prisma = new PrismaClient();
 async function main() {
   console.log(`Start seeding ...`);
 
+  // 0. Delete all existing data
+  console.log(`Deleting previous data...`);
+  // Delete records with foreign keys first to avoid constraint errors
+  await prisma.jamaahAsset.deleteMany({});
+  await prisma.statusProgress.deleteMany({});
+  await prisma.checklist.deleteMany({});
+  await prisma.document.deleteMany({});
+  await prisma.schedule.deleteMany({});
+  await prisma.gpsLocation.deleteMany({});
+  await prisma.travelPeriod.deleteMany({});
+  // Now delete User records, which are referenced by the tables above
+  await prisma.user.deleteMany({});
+  // Finally, delete the independent tables
+  await prisma.role.deleteMany({});
+  await prisma.travelAgent.deleteMany({});
+  await prisma.ritualSection.deleteMany({});
+  console.log(`Previous data deleted.`);
+
   // 1. Create Roles
   const rolePPIH = await prisma.role.upsert({
     where: { name: "PPIH" },
@@ -42,119 +60,129 @@ async function main() {
   const password123 = await bcrypt.hash("password123", 10);
 
   // 3. Create Travel Agents
-  const travelAgents = await prisma.travelAgent.createMany({
+  await prisma.travelAgent.createMany({
     data: [
-      { name: "Asyam Sakhi", address: "Malang", phone: "089513235456" },
-      { name: "Rizky Ananda", address: "Surabaya", phone: "081234567890" },
-      { name: "Dewi Lestari", address: "Bandung", phone: "082134567891" },
-      { name: "Fajar Nugroho", address: "Yogyakarta", phone: "083145678912" },
-      { name: "Intan Permata", address: "Jakarta", phone: "084156789123" },
+      {
+        name: "Jemaah Pilgrim",
+        address: "Dwidaya Tour",
+        phone: "089513235456",
+      },
+      {
+        name: "Petugas PPIH",
+        address: "Journey Holidays",
+        phone: "081234567890",
+      },
+      {
+        name: "Admin Travel Agency",
+        address: "Oceania Travel Co ",
+        phone: "082134567891",
+      },
     ],
   });
   const createdTravelAgents = await prisma.travelAgent.findMany();
 
   // 4. Create Users
-  const users = await prisma.user.createMany({
+  await prisma.user.createMany({
     data: [
       {
         email: "pilgrim1@email.com",
-        fullName: "Jemaah Pilgrim 1",
+        fullName: "Jemaah Pilgrim",
         password: password123,
         roleId: rolePilgrim.idRole,
         travelAgentId: createdTravelAgents[0].idTravelAgent,
       },
       {
         email: "mutawali1@email.com",
-        fullName: "Ahmad Mutawali 1",
+        fullName: "Ahmad Mutawali",
         password: password123,
         roleId: roleMutawali.idRole,
         travelAgentId: createdTravelAgents[0].idTravelAgent,
       },
       {
         email: "travel1@email.com",
-        fullName: "Admin Travel Agency 1",
+        fullName: "Admin Travel Agency",
         password: password123,
         roleId: roleTravel.idRole,
         travelAgentId: createdTravelAgents[0].idTravelAgent,
       },
       {
         email: "ppih1@email.com",
-        fullName: "Petugas PPIH 1",
+        fullName: "Petugas PPIH",
         password: password123,
         roleId: rolePPIH.idRole,
       },
       {
         email: "pilgrim2@email.com",
-        fullName: "Jemaah Pilgrim 2",
+        fullName: "Jemaah Pilgrim",
         password: password123,
         roleId: rolePilgrim.idRole,
         travelAgentId: createdTravelAgents[1].idTravelAgent,
       },
       {
         email: "mutawali2@email.com",
-        fullName: "Budi Mutawali 2",
+        fullName: "Budi Mutawali",
         password: password123,
         roleId: roleMutawali.idRole,
         travelAgentId: createdTravelAgents[1].idTravelAgent,
       },
       {
         email: "travel2@email.com",
-        fullName: "Admin Travel Agency 2",
+        fullName: "Admin Travel Agency",
         password: password123,
         roleId: roleTravel.idRole,
         travelAgentId: createdTravelAgents[1].idTravelAgent,
       },
       {
         email: "ppih2@email.com",
-        fullName: "Petugas PPIH 2",
+        fullName: "Petugas PPIH",
         password: password123,
         roleId: rolePPIH.idRole,
       },
       {
         email: "pilgrim3@email.com",
-        fullName: "Jemaah Pilgrim 3",
+        fullName: "Jemaah Pilgrim",
         password: password123,
         roleId: rolePilgrim.idRole,
         travelAgentId: createdTravelAgents[2].idTravelAgent,
       },
       {
         email: "mutawali3@email.com",
-        fullName: "Citra Mutawali 3",
+        fullName: "Citra Mutawali",
         password: password123,
         roleId: roleMutawali.idRole,
         travelAgentId: createdTravelAgents[2].idTravelAgent,
       },
       {
         email: "pilgrim4@email.com",
-        fullName: "Jemaah Pilgrim 4",
+        fullName: "Jemaah Pilgrim",
         password: password123,
         roleId: rolePilgrim.idRole,
-        travelAgentId: createdTravelAgents[3].idTravelAgent,
+        travelAgentId: createdTravelAgents[0].idTravelAgent, // Assuming a valid index
       },
       {
         email: "mutawali4@email.com",
-        fullName: "Doni Mutawali 4",
+        fullName: "Doni Mutawali",
         password: password123,
         roleId: roleMutawali.idRole,
-        travelAgentId: createdTravelAgents[3].idTravelAgent,
+        travelAgentId: createdTravelAgents[0].idTravelAgent, // Assuming a valid index
       },
       {
         email: "pilgrim5@email.com",
-        fullName: "Jemaah Pilgrim 5",
+        fullName: "Jemaah Pilgrim",
         password: password123,
         roleId: rolePilgrim.idRole,
-        travelAgentId: createdTravelAgents[4].idTravelAgent,
+        travelAgentId: createdTravelAgents[1].idTravelAgent, // Assuming a valid index
       },
       {
         email: "mutawali5@email.com",
-        fullName: "Eka Mutawali 5",
+        fullName: "Eka Mutawali",
         password: password123,
         roleId: roleMutawali.idRole,
-        travelAgentId: createdTravelAgents[4].idTravelAgent,
+        travelAgentId: createdTravelAgents[1].idTravelAgent, // Assuming a valid index
       },
       {
         email: "ppih3@email.com",
-        fullName: "Petugas PPIH 3",
+        fullName: "Petugas PPIH",
         password: password123,
         roleId: rolePPIH.idRole,
       },
