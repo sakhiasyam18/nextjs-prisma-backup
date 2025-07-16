@@ -27,10 +27,10 @@ export default function PpihDashboardPage() {
         return res.json();
       })
       .then(userData => {
-if (userData.role !== 'PPIH') {
-    router.push('/forbidden'); // <-- Arahkan ke halaman 'forbidden'
-} else {
-            setUser(userData);
+        if (userData.role !== 'PPIH') {
+          router.push('/forbidden');
+        } else {
+          setUser(userData);
         }
       })
       .catch(() => {
@@ -49,16 +49,17 @@ if (userData.role !== 'PPIH') {
   }
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center">
+    // Konten utama tidak perlu diubah banyak, karena layout sudah di-handle oleh layout.tsx
+    <div className="text-gray-800">
+      <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Dashboard PPIH</h1>
-        <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">
+        <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
           Logout
         </button>
       </div>
       <p className="mt-2">Selamat datang, {user.email}!</p>
-      <div className="mt-6 p-4 border border-green-500 rounded bg-green-50">
-        <h2 className="font-bold">Panel Khusus PPIH</h2>
+      <div className="mt-6 p-6 border border-green-500 rounded-lg bg-green-50">
+        <h2 className="text-xl font-bold">Panel Khusus PPIH</h2>
         <p>Ini adalah konten yang hanya bisa dilihat oleh PPIH.</p>
       </div>
     </div>
