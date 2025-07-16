@@ -34,7 +34,6 @@ export default function ListJamaahPage() {
   return (
     <div className="p-6 text-gray-800 relative">
       <h1 className="text-2xl font-bold mb-4 text-gray-800">Daftar Jamaah</h1>
-
       <table className="min-w-full bg-white rounded-xl shadow overflow-hidden">
         <thead className="bg-blue-600 text-white">
           <tr>
@@ -57,7 +56,6 @@ export default function ListJamaahPage() {
           ))}
         </tbody>
       </table>
-
       {/* Modal Popup */}
       {selectedJamaah && (
         <div
@@ -84,7 +82,8 @@ export default function ListJamaahPage() {
             </button>
           </div>
         </div>
-      )}
-    </div>
-  );
+      )}{" "}
+         
+    </div>
+  );
 }

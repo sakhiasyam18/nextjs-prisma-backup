@@ -52,7 +52,7 @@ export default function TravelDashboardPage() {
   }
 
   return (
-    <div className="p-8 text-gray-800">
+    <div className="p-8">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Dashboard Travel</h1>
         <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">

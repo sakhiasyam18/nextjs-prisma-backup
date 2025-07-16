@@ -43,6 +43,7 @@ export async function GET(request: NextRequest) {
 
     const user = await prisma.user.findUnique({
       where: { idUser: payload.userId },
+      select: { fullName: true },
     });
     console.log("User fetched from DB:", user);
 
@@ -53,6 +54,7 @@ export async function GET(request: NextRequest) {
 
     const travelAgent = await prisma.travelAgent.findFirst({
       where: { idTravelAgent: user.travelAgentId! },
+      where: { name: user.fullName },
       select: { idTravelAgent: true, name: true },
     });
     console.log("Travel agent fetched from DB:", travelAgent);

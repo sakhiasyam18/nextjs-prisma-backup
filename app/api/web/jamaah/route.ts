@@ -8,10 +8,7 @@ export async function POST(request: Request) {
 
     // Validasi
     if (!data.fullName || !data.email || !data.phone || !data.travelAgentId) {
-      return NextResponse.json(
-        { error: "Field wajib belum lengkap" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Field wajib belum lengkap" }, { status: 400 });
     }
 
     const saved = await prisma.user.create({
@@ -35,9 +32,6 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("ERROR_SAVE_JAMAAH:", error);
-    return NextResponse.json(
-      { error: "Gagal menyimpan data jamaah" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Gagal menyimpan data jamaah" }, { status: 500 });
   }
 }
