@@ -46,9 +46,25 @@ export async function POST(request: NextRequest) {
       { expiresIn: "1d" }
     );
 
-    // 4. Kirim token ke client
-    return NextResponse.json({ token });
+    // 4. Hapus password dari objek user sebelum dikirim sebagai respons
+    const { password: _, ...userWithoutPassword } = user;
 
+    // 5. Buat struktur respons baru yang lebih kaya
+    const responseData = {
+      status: "success",
+      message: "Login berhasil!",
+      user: {
+        idUser: userWithoutPassword.idUser,
+        fullName: userWithoutPassword.fullName,
+        email: userWithoutPassword.email,
+        phone: userWithoutPassword.phone,
+        role: userWithoutPassword.role.name,
+      },
+      accessToken: token,
+    };
+
+    // 6. Kirim data yang baru ke client
+    return NextResponse.json(responseData);
   } catch (error) {
     console.error("LOGIN_ERROR", error);
     return NextResponse.json(

@@ -35,15 +35,19 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
+      // Ambil seluruh data respons terlebih dahulu
+      const data = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Gagal untuk login");
+        // Gunakan 'data.message' dari API error kita yang baru
+        throw new Error(data.message || "Gagal untuk login");
       }
 
-      const { token } = await res.json();
-      localStorage.setItem("token", token);
+      // Ambil 'accessToken' dari data, BUKAN 'token'
+      const { accessToken } = data;
+      localStorage.setItem("token", accessToken);
 
-      const decodedToken = jwtDecode<DecodedToken>(token);
+      const decodedToken = jwtDecode<DecodedToken>(accessToken);
       const userRole = decodedToken.role;
 
       if (userRole === "PPIH") {
