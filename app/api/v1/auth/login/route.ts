@@ -3,8 +3,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-// Update the import path to the correct relative path
-import prisma from "../../../../../lib/prisma"; // Adjust the path as necessary
+import prisma from "../../../../../lib/prisma";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-key";
 
@@ -20,7 +19,6 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user || !user.role) {
-      // PERUBAHAN DI SINI: Struktur error dibuat lebih konsisten
       return NextResponse.json(
         { status: "error", message: "Email atau password salah" },
         { status: 401 }
@@ -30,7 +28,6 @@ export async function POST(request: NextRequest) {
     // 2. Bandingkan password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      // PERUBAHAN DI SINI: Struktur error dibuat lebih konsisten
       return NextResponse.json(
         { status: "error", message: "Email atau password salah" },
         { status: 401 }
@@ -66,9 +63,10 @@ export async function POST(request: NextRequest) {
     };
 
     // 6. Kirim data yang baru ke client
+    // BARIS YANG HILANG SUDAH DITAMBAHKAN KEMBALI DI SINI:
+    return NextResponse.json(responseData);
   } catch (error) {
     console.error("LOGIN_ERROR", error);
-    // PERUBAHAN DI SINI: Struktur error dibuat lebih konsisten
     return NextResponse.json(
       { status: "error", message: "Terjadi kesalahan pada server" },
       { status: 500 }
