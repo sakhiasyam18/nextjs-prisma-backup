@@ -35,15 +35,18 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
+      const data = await res.json(); // Ambil seluruh data respons
+
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Gagal untuk login");
+        throw new Error(data.message || "Gagal untuk login");
       }
 
-      const { token } = await res.json();
-      localStorage.setItem("token", token);
+      // Ambil accessToken dari data respons
+      const { accessToken } = data;
+      localStorage.setItem("token", accessToken);
 
-      const decodedToken = jwtDecode<DecodedToken>(token);
+      // Decode token untuk mendapatkan role
+      const decodedToken = jwtDecode<DecodedToken>(accessToken);
       const userRole = decodedToken.role;
 
       if (userRole === "PPIH") {

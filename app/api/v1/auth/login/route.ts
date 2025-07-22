@@ -20,8 +20,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user || !user.role) {
+      // PERUBAHAN DI SINI: Struktur error dibuat lebih konsisten
       return NextResponse.json(
-        { error: "Email atau password salah" },
+        { status: "error", message: "Email atau password salah" },
         { status: 401 }
       );
     }
@@ -29,8 +30,9 @@ export async function POST(request: NextRequest) {
     // 2. Bandingkan password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
+      // PERUBAHAN DI SINI: Struktur error dibuat lebih konsisten
       return NextResponse.json(
-        { error: "Email atau password salah" },
+        { status: "error", message: "Email atau password salah" },
         { status: 401 }
       );
     }
@@ -46,13 +48,29 @@ export async function POST(request: NextRequest) {
       { expiresIn: "1d" }
     );
 
-    // 4. Kirim token ke client
-    return NextResponse.json({ token });
+    // 4. Hapus password dari objek user sebelum dikirim sebagai respons
+    const { password: _, ...userWithoutPassword } = user;
 
+    // 5. Buat struktur respons baru yang lebih kaya
+    const responseData = {
+      status: "success",
+      message: "Login berhasil!",
+      user: {
+        idUser: userWithoutPassword.idUser,
+        fullName: userWithoutPassword.fullName,
+        email: userWithoutPassword.email,
+        phone: userWithoutPassword.phone,
+        role: userWithoutPassword.role.name,
+      },
+      accessToken: token,
+    };
+
+    // 6. Kirim data yang baru ke client
   } catch (error) {
     console.error("LOGIN_ERROR", error);
+    // PERUBAHAN DI SINI: Struktur error dibuat lebih konsisten
     return NextResponse.json(
-      { error: "Terjadi kesalahan pada server" },
+      { status: "error", message: "Terjadi kesalahan pada server" },
       { status: 500 }
     );
   }
