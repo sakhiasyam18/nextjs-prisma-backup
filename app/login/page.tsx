@@ -45,7 +45,6 @@ export default function LoginPage() {
       const { accessToken } = data;
       localStorage.setItem("token", accessToken);
 
-      // Decode token untuk mendapatkan role
       const decodedToken = jwtDecode<DecodedToken>(accessToken);
       const userRole = decodedToken.role;
 

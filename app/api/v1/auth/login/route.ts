@@ -63,12 +63,11 @@ export async function POST(request: NextRequest) {
     };
 
     // 6. Kirim data yang baru ke client
-    // BARIS YANG HILANG SUDAH DITAMBAHKAN KEMBALI DI SINI:
     return NextResponse.json(responseData);
   } catch (error) {
     console.error("LOGIN_ERROR", error);
     return NextResponse.json(
-      { status: "error", message: "Terjadi kesalahan pada server" },
+      { error: "Terjadi kesalahan pada server" },
       { status: 500 }
     );
   }
