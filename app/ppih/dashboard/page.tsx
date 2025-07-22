@@ -3,10 +3,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-// Impor ikon untuk tombol logout
 import { FiLogOut } from "react-icons/fi";
 
-// Tipe data User
 interface User {
   id: string;
   email: string;
@@ -15,6 +13,7 @@ interface User {
 
 export default function PpihDashboardPage() {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true); // Mulai dengan status loading true
   const router = useRouter();
 
   useEffect(() => {
@@ -26,7 +25,9 @@ export default function PpihDashboardPage() {
 
     fetch("/api/v1/auth/me", { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => {
-        if (!res.ok) throw new Error("Sesi tidak valid");
+        if (!res.ok) {
+          throw new Error("Sesi tidak valid");
+        }
         return res.json();
       })
       .then((userData) => {
@@ -39,6 +40,9 @@ export default function PpihDashboardPage() {
       .catch(() => {
         localStorage.removeItem("token");
         router.push("/login");
+      })
+      .finally(() => {
+        setLoading(false); // Hentikan loading setelah selesai
       });
   }, [router]);
 
@@ -47,13 +51,18 @@ export default function PpihDashboardPage() {
     router.push("/login");
   };
 
-  // Tampilan loading yang disesuaikan dengan tema gelap
-  if (!user) {
+  // Tampilkan loading sampai verifikasi selesai
+  if (loading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <p className="text-slate-500 animate-pulse">Memuat Dasbor PPIH...</p>
+        <p className="text-slate-500 animate-pulse">Memverifikasi sesi...</p>
       </div>
     );
+  }
+
+  // Jika tidak loading dan user tidak ada, jangan render apa-apa (akan diredirect)
+  if (!user) {
+    return null;
   }
 
   // Tampilan utama dasbor
@@ -75,7 +84,6 @@ export default function PpihDashboardPage() {
           <span>Logout</span>
         </button>
       </header>
-
       {/* Panel Utama Konten */}
       <div className="bg-slate-800/50 backdrop-blur-lg border border-slate-700 rounded-2xl p-8 shadow-2xl transition-all duration-300 hover:shadow-emerald-500/10 hover:border-slate-600">
         <h2 className="text-2xl font-bold text-white">Panel Khusus PPIH</h2>

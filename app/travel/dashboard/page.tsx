@@ -1,12 +1,10 @@
 // app/travel/dashboard/page.tsx
 "use client";
-// Impor ikon di bagian atas file Anda
-import { FiLogOut, FiArrowRight } from "react-icons/fi";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { FiLogOut, FiArrowRight } from "react-icons/fi";
 
-// Anda bisa membuat tipe data User di file terpisah agar bisa di-impor
 interface User {
   id: string;
   email: string;
@@ -15,10 +13,10 @@ interface User {
 
 export default function TravelDashboardPage() {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true); // Mulai dengan status loading true
   const router = useRouter();
 
   useEffect(() => {
-    // Logika untuk verifikasi token tetap sama
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/login");
@@ -27,13 +25,14 @@ export default function TravelDashboardPage() {
 
     fetch("/api/v1/auth/me", { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => {
-        if (!res.ok) throw new Error("Sesi tidak valid");
+        if (!res.ok) {
+          throw new Error("Sesi tidak valid");
+        }
         return res.json();
       })
       .then((userData) => {
-        // Jika yang login bukan Travel, tendang!
         if (userData.role !== "Travel") {
-          router.push("/forbidden"); // <-- Arahkan ke halaman 'forbidden'
+          router.push("/forbidden");
         } else {
           setUser(userData);
         }
@@ -41,6 +40,9 @@ export default function TravelDashboardPage() {
       .catch(() => {
         localStorage.removeItem("token");
         router.push("/login");
+      })
+      .finally(() => {
+        setLoading(false); // Hentikan loading setelah selesai
       });
   }, [router]);
 
@@ -49,19 +51,27 @@ export default function TravelDashboardPage() {
     router.push("/login");
   };
 
-  if (!user) {
-    return <p>Loading Dashboard Travel...</p>;
+  // Tampilkan loading sampai verifikasi selesai
+  if (loading) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <p className="text-slate-500 animate-pulse">Memverifikasi sesi...</p>
+      </div>
+    );
   }
-  // Ganti bagian return() Anda dengan kode di bawah ini
+
+  // Jika tidak loading dan user tidak ada, jangan render apa-apa (akan diredirect)
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="space-y-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 rounded-2xl bg-slate-800/50 p-6 backdrop-blur-lg border border-slate-700 shadow-xl">
         <div>
           <h1 className="text-3xl font-bold text-white">Dashboard Travel</h1>
-          <p className="mt-1">
-            Selamat datang kembali, {user.email}!
-          </p>
+          <p className="mt-1">Selamat datang kembali, {user.email}!</p>
         </div>
         <button
           onClick={handleLogout}
@@ -71,7 +81,6 @@ export default function TravelDashboardPage() {
           <span>Logout</span>
         </button>
       </div>
-
       {/* Panel Utama */}
       <div className="rounded-2xl bg-slate-800/50 p-8 backdrop-blur-lg border border-slate-700 shadow-xl transition-all duration-300 hover:shadow-2xl hover:border-slate-600">
         <h2 className="text-2xl font-bold text-white">

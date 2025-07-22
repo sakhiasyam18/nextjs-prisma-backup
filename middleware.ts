@@ -1,17 +1,23 @@
 // File: middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { jwtVerify } from "jose";
+import jwt from "jsonwebtoken"; // <-- GANTI DARI 'jose' KE 'jsonwebtoken'
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "your-super-secret-key"
-);
+// Secret key sekarang hanya string biasa, agar cocok dengan di file login
+const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-key";
 
-// Middleware ini SEKARANG HANYA BERJALAN di rute yang butuh proteksi
+// Definisikan tipe data untuk payload yang sudah di-decode
+interface DecodedPayload {
+  userId: string;
+  email: string;
+  role: string;
+  iat: number;
+  exp: number;
+}
+
 export async function middleware(request: NextRequest) {
   const token = request.headers.get("authorization")?.split(" ")[1];
 
-  // Karena matcher sudah diubah, kita tidak perlu lagi if/else untuk bypass login
   if (!token) {
     return NextResponse.json(
       { error: "Authentication required" },
@@ -20,12 +26,15 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    // =================================================================
+    // CARA MEMVERIFIKASI TOKEN SEKARANG MENGGUNAKAN 'jsonwebtoken'
+    // =================================================================
+    const payload = jwt.verify(token, JWT_SECRET) as DecodedPayload;
 
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-user-id", payload.userId as string);
-    requestHeaders.set("x-user-email", payload.email as string);
-    requestHeaders.set("x-user-role", payload.role as string);
+    requestHeaders.set("x-user-id", payload.userId);
+    requestHeaders.set("x-user-email", payload.email);
+    requestHeaders.set("x-user-role", payload.role);
 
     return NextResponse.next({
       request: { headers: requestHeaders },
@@ -38,14 +47,10 @@ export async function middleware(request: NextRequest) {
   }
 }
 
-// =================================================================
-// PERUBAHAN UTAMA DI SINI
-// =================================================================
 export const config = {
   /*
-   * Cocokkan semua path API, KECUALI untuk path yang mengandung 'v1/auth'.
-   * Ini secara efektif membuat rute login & register menjadi publik
-   * dan middleware hanya akan melindungi rute-rute lainnya.
+   * Matcher ini sudah benar, tidak perlu diubah.
+   * Middleware akan berjalan di semua rute /api/ KECUALI /api/v1/auth/...
    */
   matcher: "/api/((?!v1/auth).*)",
 };
