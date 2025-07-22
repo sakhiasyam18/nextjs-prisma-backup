@@ -35,13 +35,15 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json(); // Ambil seluruh data respons
+      // Ambil seluruh data respons terlebih dahulu
+      const data = await res.json();
 
       if (!res.ok) {
+        // Gunakan 'data.message' dari API error kita yang baru
         throw new Error(data.message || "Gagal untuk login");
       }
 
-      // Ambil accessToken dari data respons
+      // Ambil 'accessToken' dari data, BUKAN 'token'
       const { accessToken } = data;
       localStorage.setItem("token", accessToken);
 
