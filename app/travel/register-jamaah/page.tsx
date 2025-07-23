@@ -149,9 +149,10 @@ export default function AddJamaahPage() {
     const token = localStorage.getItem("token");
     if (!token) return;
 
+    // Pastikan request ini mengirim header Authorization
     fetch("/api/web/travel", {
       method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` }, // Baris ini sudah benar
     })
       .then((res) => res.json())
       .then((data) => {
