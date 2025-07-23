@@ -1,57 +1,31 @@
 // File: middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import jwt from "jsonwebtoken"; // <-- GANTI DARI 'jose' KE 'jsonwebtoken'
 
-// Secret key sekarang hanya string biasa, agar cocok dengan di file login
-const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-key";
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
 
-// Definisikan tipe data untuk payload yang sudah di-decode
-interface DecodedPayload {
-  userId: string;
-  email: string;
-  role: string;
-  iat: number;
-  exp: number;
-}
+  // Lewati middleware untuk route login dan register
+  if (
+    pathname.startsWith("/api/v1/auth/login") ||
+    pathname.startsWith("/api/v1/auth/register")
+  ) {
+    return NextResponse.next();
+  }
 
-export async function middleware(request: NextRequest) {
-  console.log("MIDDLEWARE SECRET:", process.env.JWT_SECRET); // <-- Tambahkan ini
-  const token = request.headers.get("authorization")?.split(" ")[1];
-
-  if (!token) {
+  // Hanya periksa apakah header Authorization ada, tanpa verifikasi
+  const authHeader = request.headers.get("authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return NextResponse.json(
       { error: "Authentication required" },
       { status: 401 }
     );
   }
 
-  try {
-    // =================================================================
-    // CARA MEMVERIFIKASI TOKEN SEKARANG MENGGUNAKAN 'jsonwebtoken'
-    // =================================================================
-    const payload = jwt.verify(token, JWT_SECRET) as DecodedPayload;
-
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-user-id", payload.userId);
-    requestHeaders.set("x-user-email", payload.email);
-    requestHeaders.set("x-user-role", payload.role);
-
-    return NextResponse.next({
-      request: { headers: requestHeaders },
-    });
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Token tidak valid atau kedaluwarsa." },
-      { status: 401 }
-    );
-  }
+  // Lanjutkan request. Verifikasi token akan dilakukan di masing-masing API route.
+  return NextResponse.next();
 }
 
 export const config = {
-  /*
-   * Matcher ini sudah benar, tidak perlu diubah.
-   * Middleware akan berjalan di semua rute /api/ KECUALI /api/v1/auth/...
-   */
-  matcher: "/api/((?!v1/auth).*)",
+  matcher: "/api/:path*",
 };
