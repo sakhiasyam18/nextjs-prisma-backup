@@ -273,11 +273,11 @@ export default function AddJamaahPage() {
         const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet);
 
         const formattedData = jsonData
-          .filter((item) => item["Nama"] && item["Email"] && item["Telephone"])
+          .filter((item) => item["nama"] && item["email"] && item["telephone"]) // <-- Gunakan huruf kecil
           .map((item) => ({
-            fullName: item["Nama"],
-            email: item["Email"],
-            phone: String(item["Telephone"]),
+            fullName: item["nama"], // <-- Gunakan huruf kecil
+            email: item["email"], // <-- Gunakan huruf kecil
+            phone: String(item["telephone"]), // <-- Gunakan huruf kecil
             travelAgentId: idTravelAgent,
             password: "password123",
           }));
