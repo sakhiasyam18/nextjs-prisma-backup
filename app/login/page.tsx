@@ -6,6 +6,40 @@ import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { FiMail, FiLock, FiLogIn } from "react-icons/fi";
 
+// --- Komponen baru khusus untuk partikel ---
+const ParticleBackground = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // Kode ini hanya berjalan di client, jadi Math.random() aman digunakan
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    // Jangan render apapun di server untuk menghindari hydration error
+    return null;
+  }
+
+  return (
+    <>
+      {Array.from({ length: 50 }).map((_, i) => (
+        <div
+          key={i}
+          className="particle"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            width: `${Math.random() * 2 + 1}px`,
+            height: `${Math.random() * 2 + 1}px`,
+            animationDuration: `${Math.random() * 20 + 20}s`,
+            animationDelay: `-${Math.random() * 40}s`,
+          }}
+        />
+      ))}
+    </>
+  );
+};
+
 // Definisikan bentuk data yang ada di dalam token
 interface DecodedToken {
   userId: string;
@@ -22,7 +56,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  // --- Logika Fungsional (Tidak Diubah) ---
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -35,15 +68,12 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      // Ambil seluruh data respons terlebih dahulu
       const data = await res.json();
 
       if (!res.ok) {
-        // Gunakan 'data.message' dari API error kita yang baru
         throw new Error(data.message || "Gagal untuk login");
       }
 
-      // Ambil 'accessToken' dari data, BUKAN 'token'
       const { accessToken } = data;
       localStorage.setItem("token", accessToken);
 
@@ -69,7 +99,6 @@ export default function LoginPage() {
     }
   };
 
-  // --- Efek Sorotan Mouse (Inovasi) ---
   useEffect(() => {
     const handleMouseMove = (e: globalThis.MouseEvent) => {
       const { currentTarget: target } = e;
@@ -144,21 +173,8 @@ export default function LoginPage() {
         id="login-main"
         className="relative flex min-h-screen items-center justify-center bg-slate-900 p-4 overflow-hidden"
       >
-        {/* --- Animasi Partikel Latar Belakang (Inovasi) --- */}
-        {Array.from({ length: 50 }).map((_, i) => (
-          <div
-            key={i}
-            className="particle"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${Math.random() * 2 + 1}px`,
-              height: `${Math.random() * 2 + 1}px`,
-              animationDuration: `${Math.random() * 20 + 20}s`,
-              animationDelay: `-${Math.random() * 40}s`,
-            }}
-          />
-        ))}
+        {/* Panggil komponen partikel di sini */}
+        <ParticleBackground />
 
         <div className="form-container w-full max-w-md space-y-8 rounded-2xl bg-slate-800/50 p-8 shadow-2xl backdrop-blur-lg border border-slate-700 z-10">
           {/* Header */}
