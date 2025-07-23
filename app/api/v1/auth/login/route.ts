@@ -8,6 +8,7 @@ import prisma from "../../../../../lib/prisma";
 const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-key";
 
 export async function POST(request: NextRequest) {
+  console.log("LOGIN SECRET:", process.env.JWT_SECRET); // <-- Tambahkan ini
   try {
     const body = await request.json();
     const { email, password } = body;

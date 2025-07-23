@@ -16,6 +16,7 @@ interface DecodedPayload {
 }
 
 export async function middleware(request: NextRequest) {
+  console.log("MIDDLEWARE SECRET:", process.env.JWT_SECRET); // <-- Tambahkan ini
   const token = request.headers.get("authorization")?.split(" ")[1];
 
   if (!token) {
