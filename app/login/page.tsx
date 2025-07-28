@@ -1,6 +1,6 @@
 // File: app/login/page.tsx
 "use client";
-
+import Image from "next/image";
 import { useState, useEffect, FormEvent, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
@@ -179,9 +179,14 @@ export default function LoginPage() {
         <div className="form-container w-full max-w-md space-y-8 rounded-2xl bg-slate-800/50 p-8 shadow-2xl backdrop-blur-lg border border-slate-700 z-10">
           {/* Header */}
           <div className="text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-sky-400 shadow-lg shadow-blue-500/30">
-              <FiLogIn className="h-8 w-8 text-white" />
-            </div>
+            <Image
+              src="/logo.png"
+              alt="Mabrurx Logo"
+              width={120}
+              height={120}
+              className="mx-auto mb-4"
+              priority
+            />
             <h1 className="text-3xl font-bold tracking-tight text-white">
               Portal Login
             </h1>

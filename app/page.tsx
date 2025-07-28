@@ -1,7 +1,7 @@
 // app/page.tsx
 import Link from "next/link";
 import { FiNavigation } from "react-icons/fi"; // Menggunakan ikon yang lebih relevan
-
+import Image from "next/image";
 export default function HomePage() {
   return (
     <main className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-slate-900 p-4 font-sans">
@@ -13,10 +13,15 @@ export default function HomePage() {
       {/* --- Kartu Konten Utama --- */}
       <div className="w-full max-w-md transform transition-all duration-300 hover:scale-105">
         <div className="rounded-2xl border border-slate-800 bg-slate-800/50 p-8 text-center shadow-2xl shadow-blue-500/10 backdrop-blur-lg sm:p-12">
-          {/* Ikon Header */}
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-emerald-500 shadow-lg shadow-blue-500/50">
-            <FiNavigation className="h-10 w-10 text-white" />
-          </div>
+          {/* Logo Header */}
+          <Image
+            src="/logo.png"
+            alt="Mabrurx Logo"
+            width={128}
+            height={128}
+            className="mx-auto"
+            priority
+          />
 
           {/* Judul */}
           <h1 className="mt-8 bg-gradient-to-br from-white to-slate-400 bg-clip-text text-4xl font-extrabold text-transparent">

@@ -1,6 +1,6 @@
 // app/ppih/components/sidebarClient.tsx
 "use client";
-
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -37,13 +37,14 @@ export default function ClientSide() {
   return (
     <div className="w-64 bg-slate-900 text-slate-300 p-4 flex flex-col border-r border-slate-800 shadow-2xl">
       {/* Header Sidebar: Logo Aplikasi */}
-      <div className="flex items-center gap-3 px-3 py-2 mb-6">
-        <div className="bg-emerald-600 p-2 rounded-lg">
-          <FiShield className="text-white h-6 w-6" />
-        </div>
-        <div>
-          <span className="text-xl font-bold text-white">Portal PPIH</span>
-        </div>
+      <div className="flex items-center justify-center py-2 mb-6 border-b border-slate-800">
+        <Image
+          src="/logo.png"
+          alt="Mabrurx Logo"
+          width={100}
+          height={100}
+          priority
+        />
       </div>
 
       {/* Navigasi Utama */}
